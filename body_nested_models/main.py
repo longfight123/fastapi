@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Path, Query, Body
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, HttpUrl
 
 app = FastAPI()
 
@@ -14,7 +14,7 @@ app = FastAPI()
 
 # Declare a submodel Image
 class Image(BaseModel):
-    url: str
+    url: HttpUrl
     name: str
 
 # Declare the type of set in Python 3.11
