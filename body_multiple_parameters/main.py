@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Path, Query
+from fastapi import FastAPI, Path, Query, Body
 from pydantic import BaseModel
 
 app = FastAPI()
@@ -29,14 +29,29 @@ class User(BaseModel):
 #     return results
 
 # Declaring path, query, and body parameters
+# @app.put("/items/{item_id}")
+# async def update_item(
+#     *,
+#     item_id: int = Path(title="The ID of the item to get", ge=0, le=1000),
+#     user: User,
+#     item: Item
+# ):
+#     results = {"item_id": item_id}
+#     results.update({"item": item})
+#     results.update({"user": user})
+#     return results
+
+# Declaring a singular value in the body
 @app.put("/items/{item_id}")
 async def update_item(
     *,
     item_id: int = Path(title="The ID of the item to get", ge=0, le=1000),
     user: User,
-    item: Item
+    item: Item,
+    importance: int = Body()
 ):
     results = {"item_id": item_id}
     results.update({"item": item})
     results.update({"user": user})
+    results.update({"importance": importance})
     return results
