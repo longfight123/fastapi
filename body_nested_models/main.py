@@ -4,12 +4,20 @@ from pydantic import BaseModel, Field
 app = FastAPI()
 
 # Declare the type of list in Python 3.11
+# class Item(BaseModel):
+#     name: str
+#     description: str | None = Field(default=None, title="The description of the item", max_length=300)
+#     price: float
+#     tax: float | None = Field(default=None, description="The price must be greater than 0", gt=0)
+#     tags: list[str] = []
+    
+# Declare the type of set in Python 3.11
 class Item(BaseModel):
     name: str
     description: str | None = Field(default=None, title="The description of the item", max_length=300)
     price: float
     tax: float | None = Field(default=None, description="The price must be greater than 0", gt=0)
-    tags: list[str] = []
+    tags: set[str] = {}
 
 # Declare a list field in the model
 @app.put("/items/{item_id}")
