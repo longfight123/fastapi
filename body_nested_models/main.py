@@ -103,3 +103,10 @@ class Offer(BaseModel):
 @app.put("/offers")
 async def update_item(*,  offer: Offer):
     return offer
+
+
+# Bodies of pure lists
+
+@app.post("/images/multiple")
+async def create_multiple_images(images: list[Image]):
+    return images
