@@ -42,16 +42,48 @@ class User(BaseModel):
 #     return results
 
 # Declaring a singular value in the body
+# @app.put("/items/{item_id}")
+# async def update_item(
+#     *,
+#     item_id: int = Path(title="The ID of the item to get", ge=0, le=1000),
+#     user: User,
+#     item: Item,
+#     importance: int = Body()
+# ):
+#     results = {"item_id": item_id}
+#     results.update({"item": item})
+#     results.update({"user": user})
+#     results.update({"importance": importance})
+#     return results
+
+# Multiple body parameters with a query parameter
+# @app.put("/items/{item_id}")
+# async def update_item(
+#     *,
+#     item_id: int = Path(title="The ID of the item to get", ge=0, le=1000),
+#     user: User,
+#     item: Item,
+#     importance: int = Body(gt=0),
+#     q: str | None = None
+# ):
+#     results = {"item_id": item_id}
+#     results.update({"item": item})
+#     results.update({"user": user})
+#     results.update({"importance": importance})
+#     if q:
+#         results.update({"q": q})
+#     return results
+
+# Embed a single body parameter
 @app.put("/items/{item_id}")
 async def update_item(
     *,
     item_id: int = Path(title="The ID of the item to get", ge=0, le=1000),
-    user: User,
-    item: Item,
-    importance: int = Body()
+    item: Item = Body(embed=True),
+    q: str | None = None
 ):
     results = {"item_id": item_id}
     results.update({"item": item})
-    results.update({"user": user})
-    results.update({"importance": importance})
+    if q:
+        results.update({"q": q})
     return results
