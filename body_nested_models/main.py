@@ -110,3 +110,9 @@ async def update_item(*,  offer: Offer):
 @app.post("/images/multiple")
 async def create_multiple_images(images: list[Image]):
     return images
+
+# Bodies of arbitrary dictionaries
+
+@app.post("/index-weights")
+async def create_index_weights(weights: dict[int, float]):
+    return weights
