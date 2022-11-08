@@ -11,13 +11,20 @@ app = FastAPI()
 #     tax: float | None = Field(default=None, description="The price must be greater than 0", gt=0)
 #     tags: list[str] = []
     
+
+# Declare a submodel Image
+class Image(BaseModel):
+    url: str
+    name: str
+
 # Declare the type of set in Python 3.11
 class Item(BaseModel):
     name: str
     description: str | None = Field(default=None, title="The description of the item", max_length=300)
     price: float
     tax: float | None = Field(default=None, description="The price must be greater than 0", gt=0)
-    tags: set[str] = {}
+    tags: set[str] = set()
+    image: Image | None = None
 
 # Declare a list field in the model
 @app.put("/items/{item_id}")
