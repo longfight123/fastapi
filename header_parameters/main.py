@@ -10,8 +10,15 @@ app = FastAPI()
 #     return {"User-Agent": user_agent}
 
 
-# defining a different non predefined header with convert_underscores=False
+# Defining a different non predefined header with convert_underscores=False
+
+# @app.get("/items")
+# async def read_items(strange_header: str | None = Header(default=None, convert_underscores=False)):
+#     return {"strange_header": strange_header}
+
+
+# Header with multiple values
 
 @app.get("/items")
-async def read_items(strange_header: str | None = Header(default=None, convert_underscores=False)):
-    return {"strange_header": strange_header}
+async def read_items(x_token: list[str] | None = Header(default=None)):
+    return {"X-Token": x_token}
