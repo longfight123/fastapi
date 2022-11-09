@@ -46,6 +46,31 @@ app = FastAPI()
 
 # Declaring a Body with an example
 
+# class Item(BaseModel):
+#     name: str
+#     description: str | None = None
+#     price: float
+#     tax: float | None = None
+
+# @app.put("/items/{item_id}")
+# async def update_item(
+#     item_id: int, 
+#     item: Item = Body(
+#         example={
+#             "name": "Foo",
+#             "description": "A very nice item",
+#             "price": 35.4,
+#             "tax": 4.2
+#         }
+#     )
+# ):
+#     results = {"item_id": item_id, "item": item}
+#     return results
+
+
+
+# Declaring a body with multiple exampleS <----- EXAMPLES
+
 class Item(BaseModel):
     name: str
     description: str | None = None
@@ -56,11 +81,27 @@ class Item(BaseModel):
 async def update_item(
     item_id: int, 
     item: Item = Body(
-        example={
-            "name": "Foo",
-            "description": "A very nice item",
-            "price": 35.4,
-            "tax": 4.2
+        examples={
+            "normal": {
+                "summary": "A normal example",
+                "description": "FastAPI can handle a normal example",
+                "value": {
+                    "name": "Foo",
+                    "description": "A very nice item",
+                    "price": 35.4,
+                    "tax": 4.2
+                }
+            },
+            "converted": {
+                "summary": "A converted example",
+                "description": "FastAPI can convert numeric strings to numeric values",
+                "value": {
+                    "name": "FooBar",
+                    "description": "Another nice Item",
+                    "price": "35.4",
+                    "tax": "4.2"
+                }
+            }
         }
     )
 ):
