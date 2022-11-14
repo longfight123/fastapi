@@ -102,17 +102,27 @@ app = FastAPI()
 
 
 
-# List of models
+# List of models as the response_model
 
-class Item(BaseModel):
-    name: str
-    description: str
+# class Item(BaseModel):
+#     name: str
+#     description: str
 
-items = [
-    {"name": "Foo", "description": "There comes my hero"},
-    {"name": "Red", "description": "It's my aeroplane"}
-]
+# items = [
+#     {"name": "Foo", "description": "There comes my hero"},
+#     {"name": "Red", "description": "It's my aeroplane"}
+# ]
 
-@app.get("/items/", response_model=list[Item])
-async def read_items():
-    return items
+# @app.get("/items/", response_model=list[Item])
+# async def read_items():
+#     return items
+
+
+
+
+# Arbitrary dict as the response model when you don't know the keys and values
+# that you want to return beforehand, but you know the type
+
+@app.get("/keyword-weights/", response_model=dict[str, float])
+async def read_keyword_weights():
+    return {"foo": 2.3, "bar": 3.4}
