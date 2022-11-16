@@ -23,15 +23,34 @@ app = FastAPI()
 
 # Make a file optional by using type annotation and default=None
 
+# @app.post("/files")
+# async def create_file(file: bytes | None = File(default=None)):
+#     if file:
+#         return {"file_size": len(file)}
+#     else:
+#         return {"file_size": "No file sent."}
+
+# @app.post("/uploadfile")
+# async def create_upload_file(file: UploadFile | None = None):
+#     if file:
+#         return {"filename": file.filename}
+#     else:
+#         return {"filename": "No upload file sent."}
+
+
+
+
+# Add metadata with UploadFile by using the File() class/function
+
 @app.post("/files")
-async def create_file(file: bytes | None = File(default=None)):
+async def create_file(file: bytes | None = File(default=None, description="A file read as bytes")):
     if file:
         return {"file_size": len(file)}
     else:
         return {"file_size": "No file sent."}
 
 @app.post("/uploadfile")
-async def create_upload_file(file: UploadFile | None = None):
+async def create_upload_file(file: UploadFile | None = File(default=None, description="A file read as UploadFile")):
     if file:
         return {"filename": file.filename}
     else:
