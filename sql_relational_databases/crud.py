@@ -28,7 +28,7 @@ def get_items(db: Session, skip: int = 0, limit: int = 100):
     return items
 
 def create_user_item(db: Session, user_id: int, item: schemas.ItemCreate):
-    db_item = models.Item(title = item.title, description = item.description, user_id = user_id)
+    db_item = models.Item(title = item.title, description = item.description, owner_id = user_id)
     db.add(db_item)
     db.commit()
     db.refresh(db_item)

@@ -8,7 +8,7 @@ SQLALCHEMY_DATABASE_URL = 'sqlite:///./sql_app.db'
 # Create SQLAlchemy engine, note the connect_args argument is only needed for SQLite
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,
-    connect_args={"check_same_threads": False}
+    connect_args={"check_same_thread": False}
 )
 
 # Create SessionLocal class as our database session. 
