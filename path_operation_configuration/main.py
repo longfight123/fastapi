@@ -1,5 +1,6 @@
 from fastapi import FastAPI, status
 from pydantic import BaseModel
+from enum import Enum
 
 app = FastAPI()
 
@@ -18,14 +19,33 @@ class Item(BaseModel):
 
 # Tags
 
-@app.post("/items/", response_model=Item, tags=["items"])
+# @app.post("/items/", response_model=Item, tags=["items"])
+# async def create_item(item: Item):
+#     return item
+
+# @app.get("/items/", response_model=Item, tags=["items"])
+# async def get_items():
+#     return [{"name": "Foo", "price": 42}]
+
+# @app.get("/users/", tags=["users"])
+# async def get_users():
+#     return [{"username": "johndoe"}]
+
+
+# Tags with enum
+
+class Tags(Enum):
+    items = "items"
+    users = "users"
+
+@app.post("/items/", response_model=Item, tags=[Tags.items])
 async def create_item(item: Item):
     return item
 
-@app.get("/items/", response_model=Item, tags=["items"])
+@app.get("/items/", response_model=Item, tags=[Tags.items])
 async def get_items():
     return [{"name": "Foo", "price": 42}]
 
-@app.get("/users/", tags=["users"])
+@app.get("/users/", tags=[Tags.users])
 async def get_users():
     return [{"username": "johndoe"}]
