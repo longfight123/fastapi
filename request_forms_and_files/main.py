@@ -3,6 +3,8 @@ from fastapi.responses import HTMLResponse
 
 app = FastAPI()
 
+# Declare Files and Forms at the same time using File and Form
+
 @app.post("/files")
 async def create_file(
     file: bytes = File(), fileb: UploadFile = File(), token: str = Form()
