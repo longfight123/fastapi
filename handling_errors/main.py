@@ -1,7 +1,9 @@
 from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.responses import JSONResponse, PlainTextResponse
 from fastapi.exceptions import RequestValidationError
+from starlette.exceptions import HTTPException as StarletteHTTPException    
 from fastapi.encoders import jsonable_encoder
+from fastapi.exception_handlers import http_exception_handler, request_validation_exception_handler
 from pydantic import BaseModel
 
 app = FastAPI()
@@ -77,17 +79,36 @@ items = {
 
 # Use the RequestValidationError body and error()
 
-class Item(BaseModel):
-    name: str
-    size: int
+# class Item(BaseModel):
+#     name: str
+#     size: int
+
+# @app.exception_handler(RequestValidationError)
+# async def validation_exception_handler(request: Request, exception: RequestValidationError):
+#     return JSONResponse(
+#         content=jsonable_encoder({"detail": exception.errors(), "body": exception.body}),
+#         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
+#     )
+
+# @app.post("/items/")
+# async def create_item(item: Item):
+#     return item
+
+
+# Reuse fastapi's exception handlers
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exception: RequestValidationError):
-    return JSONResponse(
-        content=jsonable_encoder({"detail": exception.errors(), "body": exception.body}),
-        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
-    )
+    print(f"OMG A VALIDATION ERROR: {repr(exception)}")
+    return await request_validation_exception_handler(request, exception)
 
-@app.post("/items/")
-async def create_item(item: Item):
-    return item
+@app.exception_handler(StarletteHTTPException)
+async def custom_http_exception_handler(request: Request, exception: StarletteHTTPException):
+    print(f"OMG! An HTTP Error! {exception}")
+    return await http_exception_handler(request, exception)
+
+@app.get("/items/{item_id}")
+async def get_item(item_id: int):
+    if item_id == 3:
+        raise HTTPException(status_code=418, detail="Nope! I don't like 3.")
+    return {"item_id": item_id}
