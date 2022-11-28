@@ -1,6 +1,8 @@
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.responses import JSONResponse, PlainTextResponse
 from fastapi.exceptions import RequestValidationError
+from fastapi.encoders import jsonable_encoder
+from pydantic import BaseModel
 
 app = FastAPI()
 
@@ -52,22 +54,40 @@ items = {
 
 # override request validation handlers and HTTPException handlers
 
+# @app.exception_handler(RequestValidationError)
+# def validation_exception_handler(request: Request, exception: RequestValidationError):
+#     return PlainTextResponse(
+#         status_code=422,
+#         content=str(exception)
+#     )
+
+# @app.exception_handler(HTTPException)
+# def http_exception_handler(request: Request, exception: HTTPException):
+#     return PlainTextResponse(
+#         status_code=exception.status_code,
+#         content=exception.detail
+#     )
+
+# @app.get("/items/{item_id}")
+# def get_item(item_id: int):
+#     if item_id == 3:
+#         raise HTTPException(status_code=418, detail="Nope! I don't like 3.")
+#     return {"item_id": item_id}
+
+
+# Use the RequestValidationError body and error()
+
+class Item(BaseModel):
+    name: str
+    size: int
+
 @app.exception_handler(RequestValidationError)
-def validation_exception_handler(request: Request, exception: RequestValidationError):
-    return PlainTextResponse(
-        status_code=422,
-        content=str(exception)
+async def validation_exception_handler(request: Request, exception: RequestValidationError):
+    return JSONResponse(
+        content=jsonable_encoder({"detail": exception.errors(), "body": exception.body}),
+        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
     )
 
-@app.exception_handler(HTTPException)
-def http_exception_handler(request: Request, exception: HTTPException):
-    return PlainTextResponse(
-        status_code=exception.status_code,
-        content=exception.detail
-    )
-
-@app.get("/items/{item_id}")
-def get_item(item_id: int):
-    if item_id == 3:
-        raise HTTPException(status_code=418, detail="Nope! I don't like 3.")
-    return {"item_id": item_id}
+@app.post("/items/")
+async def create_item(item: Item):
+    return item
